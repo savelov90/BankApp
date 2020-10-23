@@ -27,7 +27,6 @@ public class ValidateInput extends ConsoleInput {
 
         try {
             username = username.substring(0, 1).toUpperCase() + username.substring(1);
-            System.out.println(username);
 
         } catch (StringIndexOutOfBoundsException e) {
             System.out.println("Неправильный логин");

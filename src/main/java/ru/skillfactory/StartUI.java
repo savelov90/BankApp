@@ -92,7 +92,7 @@ public class StartUI {
         bankService.addAccount(new BankAccount("Андрей", "Aaaaaa", "1112", 1502L));
         bankService.addAccount(new BankAccount("Борис", "Qwerty1", "1113", 10000L));
         bankService.addAccount(new BankAccount("Михаил", "Qwerty12", "1114", 10L));
-        bankService.addAccount(new BankAccount("Катерина", "Qwerty123", "1115", 1000));
+        bankService.addAccount(new BankAccount("Катерина", "Qwerty123", "1115", 1000L));
         bankService.addAccount(new BankAccount("Елена", "Qwer", "1116", 1L));
         bankService.addAccount(new BankAccount("Аркадий", "Qwert", "1117", 10L));
 

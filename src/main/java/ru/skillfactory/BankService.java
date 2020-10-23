@@ -125,14 +125,16 @@ public class BankService {
         boolean srcDone = false;
         boolean destDone = false;
         boolean checkAmm = false;
-        BankAccount check = new BankAccount();;
+        BankAccount check = new BankAccount();
+
 
         for (Map.Entry<String, BankAccount> entry : accounts.entrySet()) {
             if (entry.getKey().equals(srcRequisite)) {
                 check = entry.getValue();
                 srcDone = true;
+                break;
             } else {
-                return false;
+                srcDone = false;
             }
         }
 
@@ -146,14 +148,19 @@ public class BankService {
                     check.setBalance(check.getBalance() - amount);
                     checkDest.setBalance(checkDest.getBalance() + amount);
                     System.out.println("Перевод выполнен, текущий баланс: " + check.getBalance() + " рублей");
+                    break;
                 } else {
-                    System.out.println("Недостаточно средств...");
-                    return false;
+                    checkAmm = false;
                 }
             } else {
-                System.out.println("Неправильные реквизиты получателя, перевод не выполнен");
-                return false;
+                destDone = false;
             }
+        }
+
+        if (!destDone) {
+            System.out.println("Неправильные реквизиты получателя, перевод не выполнен");
+        } else if (!checkAmm) {
+            System.out.println("Недостаточно средств...");
         }
 
         return srcDone & destDone & checkAmm;
