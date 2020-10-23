@@ -126,7 +126,7 @@ public class BankService {
         boolean destDone = false;
         boolean checkAmm = false;
         BankAccount check = new BankAccount();
-
+        BankAccount checkDest = new BankAccount();
 
         for (Map.Entry<String, BankAccount> entry : accounts.entrySet()) {
             if (entry.getKey().equals(srcRequisite)) {
@@ -140,21 +140,21 @@ public class BankService {
 
         for (Map.Entry<String, BankAccount> entryDest : accounts.entrySet()) {
             if (entryDest.getKey().equals(destRequisite)) {
-                BankAccount checkDest = entryDest.getValue();
+                checkDest = entryDest.getValue();
                 destDone = true;
-
-                if (amount < check.getBalance()) {
-                    checkAmm = true;
-                    check.setBalance(check.getBalance() - amount);
-                    checkDest.setBalance(checkDest.getBalance() + amount);
-                    System.out.println("Перевод выполнен, текущий баланс: " + check.getBalance() + " рублей");
-                    break;
-                } else {
-                    checkAmm = false;
-                }
+                break;
             } else {
                 destDone = false;
             }
+        }
+
+        if (amount <= check.getBalance()) {
+            checkAmm = true;
+            check.setBalance(check.getBalance() - amount);
+            checkDest.setBalance(checkDest.getBalance() + amount);
+            System.out.println("Перевод выполнен, текущий баланс: " + check.getBalance() + " рублей");
+        } else {
+            checkAmm = false;
         }
 
         if (!destDone) {
