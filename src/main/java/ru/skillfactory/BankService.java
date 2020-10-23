@@ -9,25 +9,18 @@ import static java.util.Optional.ofNullable;
 
 /**
  * BankService - класс, который нарушает принцип единственной ответственности. У нас он сразу
- * и хранит аккаунты, и реализует логику проверки баланса и переводов. Можете использовать
- * его в текущем виде, можете решить проблему множественной ответственности и создать интерфейс
- * AccountStore, написать его реализации и в BankService передавать хранилище. В этом случае в
- * этом классе должна быть только логика переводов + баланс и вы просто обращаетесь в store, передовая
- * ответ на уровень выше.
+ * и хранит аккаунты, и реализует логику проверки баланса и переводов.
  */
 public class BankService {
     /**
      * В Map-е храните аккаунты, ключ это реквизиты
-     * (реквизиты у аккаунтов неизменяемые, это важно сохранить чтобы ключ в map всегда был такой же как у аккаунта).
-     * <p>
-     * Подумайте почему используется именно map, можно ли использовать решение лучше.
+     * (реквизиты у аккаунтов неизменяемые, это важно сохранить чтобы ключ в map всегда был такой же как у аккаунта)
      */
     private final Map<String, BankAccount> accounts = new HashMap<>();
 
     /**
-     * Метод добавляете аккаунт в Map-у, если у аккаунта уникальные реквизиты (можно проверить что в Map нет ключа с такими реквизитами).
-     * <p>
-     * Если поймёте как использовать и верно примените Map.putIfAbsent будет очень хорошо. Этот метод добавляет значание в map если ключ в map ранее не был.
+     * Метод добавляете аккаунт в Map-у, если у аккаунта уникальные реквизиты.
+     * Используется Map.putIfAbsent. Этот метод добавляет значание в map если ключ в map ранее не был.
      *
      * @param account Аккаунт с заполненными полями.
      */
@@ -36,15 +29,13 @@ public class BankService {
     }
 
     /**
-     * Метод проверяет что в Map-е есть аккаунт, если есть вернёт реквезиты. В моей реализации
-     * метод просто вернёт реквезиты без генерации исключений. Вы можете использовать подход с
-     * исключениями, тогда на каждую ситуацию должно быть отдельное исключение
+     * Метод проверяет что в Map-е есть аккаунт, если есть вернёт реквизиты.
      *
      * @param username валидная строка.
      * @param password валидная строка.
      * @return возвращает объект Optional, который будет содержат строку - requisite,
-     * если передоваемого пользователя нету или пароль не совпадает вы сможете
-     * передать пустой объект Optional и проверить что он не пуст.
+     * если передоваемого пользователя нет или пароль не совпадает, то
+     * передаем пустой объект Optional и проверяем, что он пуст.
      */
     public Optional<String> getRequisiteIfPresent(String username, String password) {
 
@@ -66,11 +57,10 @@ public class BankService {
 
 
     /**
-     * Метод кол-во средств на передаваемых реквизитах. На этом методе вам нужно выкидывать исключение,
-     * если передаваемые реквизиты не валидны, это единственный способ сообщить о проблеме.
+     * Метод кол-во средств на передаваемых реквизитах.
      *
      * @param requisite реквизиты, строка в произвольном формате.
-     * @return кол-во средств в копейках (для других валют аналогично было бы).
+     * @return кол-во средств.
      */
     public long balance(String requisite) {
         Long currentBalance = 0l;
@@ -87,7 +77,7 @@ public class BankService {
 
 
     /**
-     * Метод должен пополнять баланс.
+     * Метод пополняет баланс.
      *
      * @param requisite реквизиты, строка в произвольном формате.
      * @param amount    сумма для пополнения.
@@ -116,7 +106,7 @@ public class BankService {
      *
      * @param srcRequisite  реквизиты, строка в произвольном формате.
      * @param destRequisite реквизиты, строка в произвольном формате.
-     * @param amount        кол-во средств в копейках (для других валют аналогично было бы).
+     * @param amount        кол-во средств.
      * @return true если выполнены все условия, средства фактически переведены.
      */
     public boolean transferMoney(String srcRequisite, String destRequisite, long amount) {
@@ -124,9 +114,11 @@ public class BankService {
 
         boolean srcDone = false;
         boolean destDone = false;
-        boolean checkAmm = false;
+        boolean checkAmm;
         BankAccount check = new BankAccount();
         BankAccount checkDest = new BankAccount();
+
+        //проверка наличия пользователя, выполняющего перевод денег
 
         for (Map.Entry<String, BankAccount> entry : accounts.entrySet()) {
             if (entry.getKey().equals(srcRequisite)) {
@@ -138,6 +130,8 @@ public class BankService {
             }
         }
 
+        //проверка наличия пользователя, которому переводят деньги
+
         for (Map.Entry<String, BankAccount> entryDest : accounts.entrySet()) {
             if (entryDest.getKey().equals(destRequisite)) {
                 checkDest = entryDest.getValue();
@@ -148,11 +142,13 @@ public class BankService {
             }
         }
 
+        //проверка наличия денежных средств на балансе пользователя
+
         if (amount <= check.getBalance()) {
-            checkAmm = true;
             check.setBalance(check.getBalance() - amount);
             checkDest.setBalance(checkDest.getBalance() + amount);
             System.out.println("Перевод выполнен, текущий баланс: " + check.getBalance() + " рублей");
+            checkAmm = true;
         } else {
             checkAmm = false;
         }
@@ -163,7 +159,7 @@ public class BankService {
             System.out.println("Недостаточно средств...");
         }
 
-        return srcDone & destDone & checkAmm;
+        return srcDone & destDone & checkAmm; //если все условия соблюдены, то возвращаю true
     }
 }
 

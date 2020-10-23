@@ -5,15 +5,15 @@ import ru.skillfactory.actions.*;
 import java.util.Optional;
 
 /**
- * Класс, который запускает общение с пользователем.
+ * Класс, который запускает общение с пользователем приложения.
  */
 public class StartUI {
 
     /**
-     * Здесь будет происходить инициализация меню, вы
-     * 1. Авторизовываете пользователя.
-     * 2. Печатаете меню.
-     * 3. В зависимости от введённого числа запускаете нужную функцию.
+     * Инициализация меню, вы
+     * 1. Авторизация пользователя в методе authorization.
+     * 2. Выводится меню для пользователя меню.
+     * 3. В зависимости от введённого числа запускается нужная функция меню.
      *
      * @param bankService BankService объект.
      * @param actions     массив с действиями.
@@ -37,29 +37,29 @@ public class StartUI {
 
 
     /**
-     * Метод должен работать пока пользователь не авторизуется (пока отключил цикл!).
+     * Метод работает, пока пользователь не авторизуется.
      *
      * @param bankService BankService объект.
      * @param input       Input объект.
      * @return возвращает реквизиты аккаунта, под которым авторизовался пользователь.
-     * Получайте их вызывом метода getRequisiteIfPresent, класса BankService.
+     * Получаю их вызывом метода getRequisiteIfPresent, класса BankService.
      */
     public static String authorization(BankService bankService, Input input) {
 
-        String rsl = null;
+        String requisite = null;
         boolean authComplete = false;
-        while (!authComplete) { // цикл отключён!!!
+        while (!authComplete) {
             /*
-             * Запрашиваете у пользователя логин, пароль пока он не пройдёт авторизацию.
-             * Авторизация пройдена при условие что в BankService есть пользователь с
-             * данным логином и паролем (работайте только с теми пользователями что есть).
+             * Запрашивается у пользователя логин, пароль пока он не пройдёт авторизацию.
+             * Авторизация пройдена при условии что в BankService есть пользователь с
+             * данным логином и паролем.
              */
             String login = input.askUsername("Ваш логин: ");
             String password = input.askStr("Ваш password: ");
             Optional<String> optional = bankService.getRequisiteIfPresent(login, password);
 
-            if (!optional.isEmpty()) {
-                rsl = optional.get();
+            if (optional.isPresent()) {
+                requisite = optional.get();
                 authComplete = true;
             } else {
                 authComplete = false;
@@ -68,11 +68,11 @@ public class StartUI {
 
         }
         System.out.println("Авторизация выполнена успешно");
-        return rsl;
+        return requisite;
     }
 
     /**
-     * Печатается меню пользователя (только печатается, общения с пользователем нету).
+     * Печатается меню пользователя.
      *
      * @param actions массив с действиями.
      */
@@ -85,9 +85,7 @@ public class StartUI {
 
     public static void main(String[] args) {
         BankService bankService = new BankService();
-        // здесь создадите несколько аккаунтов на проверку
-        // данные осмысленно заполните, не просто пустые строки
-
+        // создаем несколько аккаунтов на проверку
         bankService.addAccount(new BankAccount("Евгений", "Qwerty", "1111", 150L));
         bankService.addAccount(new BankAccount("Андрей", "Aaaaaa", "1112", 1502L));
         bankService.addAccount(new BankAccount("Борис", "Qwerty1", "1113", 10000L));
@@ -103,7 +101,7 @@ public class StartUI {
                 new TransferToAction(),
                 new Exit()
         };
-        // Наш Input можно менять на нужную реализацию (ValidateInput доделайте)
+        // Input изменен на ValidateInput, который проверяет правильность введенных данных
         Input input = new ValidateInput();
         // Запускаем наш UI передавая аргументами банковский сервис, экшены и Input.
         new StartUI().init(bankService, actions, input);

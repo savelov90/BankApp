@@ -1,16 +1,15 @@
 package ru.skillfactory;
 
 /**
- * Этот класс обновлённая версия вашего консольного ввода, здесь не просто спрашивайте ввод, а проверяйте его.
+ * Этот класс обновлённая версия консольного ввода, проверяю ввод.
  * Главная задача данного класса решить проблему ошибок ввода пользователем.
- *
  * Метод askInt должен точно возвращать число и не генерировать exceptions.
  * Требования к askStr сформулируйте сами или не переопределяйте его если с ним проблем не увидите.
  */
 public class ValidateInput extends ConsoleInput {
 
     /**
-     * Сами решите необходимо ли переопределение этого метода.
+     * Решил не переопределять.
      */
     @Override
     public String askStr(String question) {
@@ -18,6 +17,8 @@ public class ValidateInput extends ConsoleInput {
         return super.askStr(question);
 
     }
+
+    /**Метод сделан для форматирования Username (приводит к большой букве и убирает пробелы случайные)*/
 
     public String askUsername(String question) {
         System.out.print(question);
@@ -37,8 +38,7 @@ public class ValidateInput extends ConsoleInput {
     }
 
     /**
-     * Необходимо ли переопределять метод, или убрать переопределение вы решаете сами.
-     * На данный момент в этот методе может произойти непроверяемое исключение.
+     * переопределил, ищет исключение при вводе и обрабатывает, убирает лишние пробеллы при вводе.
      */
     @Override
     public int askInt(String question) {
@@ -61,7 +61,7 @@ public class ValidateInput extends ConsoleInput {
     }
 
     /**
-     * Сами решите необходимо ли переопределение этого метода.
+     * переопределил, ищет исключение при вводе и обрабатывает, убирает лишние пробеллы при вводе.
      */
     @Override
     public long askLong(String question) {

@@ -13,10 +13,9 @@ public class TransferToAction implements UserAction {
     }
 
     /**
-     * Перевести средства - также общаетесь в этом методе с пользователем и передаёте информацию,
-     * так как операция важная желательно ещё раз заставлять вводить пароль/логин и передавать информацию
-     * в BankService. Exceptions пользователю печатать не надо (как и в других методах этого класса),
-     * вводите подсказки или написанные вами сообщения об ошибках.
+     * Перевести средства - также общаюсь в этом методе с пользователем,
+     * так как операция важная ещё раз заставляю вводить пароль/логин и передаю информацию
+     * в BankService.
      *
      * @param bankService BankService объект.
      * @param input       Input объект.
@@ -27,7 +26,7 @@ public class TransferToAction implements UserAction {
     public boolean execute(BankService bankService, Input input, String requisite) {
 
         String destRequisite = input.askStr("Введите реквизиты получателя: ");
-        Long amount = input.askLong("Введите сумму: ");
+        long amount = input.askLong("Введите сумму: ");
         boolean isDone = false;
 
 
