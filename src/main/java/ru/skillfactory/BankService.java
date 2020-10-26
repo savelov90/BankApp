@@ -63,7 +63,7 @@ public class BankService {
      * @return кол-во средств.
      */
     public long balance(String requisite) {
-        Long currentBalance = 0l;
+        long currentBalance = 0L;
         for (Map.Entry<String, BankAccount> entry : accounts.entrySet()) {
 
             if (entry.getKey().equals(requisite)) {
